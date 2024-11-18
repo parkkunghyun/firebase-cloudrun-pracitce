@@ -26,7 +26,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy chair-shop \
+          gcloud run deploy firebase-practice \
             --image us-central1-docker.pkg.dev/as-rudgus4620/firebase-basic/firebase1118:latest \
             --platform managed \
             --region us-central1 \
