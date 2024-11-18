@@ -1,35 +1,38 @@
-name: Build and Deploy to Cloud Run
+name: Firebase Hosting CI/CD
 
 on:
   push:
     branches:
-      - main
+      - main  # main 브랜치에 push할 때마다 배포
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+      # 2. Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-          project_id: as-rudgus4620
+          node-version: '16'  # 사용하는 Node.js 버전
 
-      - name: Configure Docker
-        run: gcloud auth configure-docker
-
-      - name: Build and push to Google Container Registry
-        run: gcloud builds submit --config firebase-basic.yml .
-
-      - name: Deploy to Cloud Run
+      # 3. Install dependencies
+      - name: Install dependencies
         run: |
-          gcloud run deploy firebase-practice \
-            --image us-central1-docker.pkg.dev/as-rudgus4620/firebase-basic/firebase1118:latest \
-            --platform managed \
-            --region us-central1 \
-            --allow-unauthenticated \
-            --set-env-vars \
-            REACT_APP_FIREBASE_API_KEY=${{ secrets.REACT_APP_FIREBASE_API_KEY }},REACT_APP_FIREBASE_AUTH_DOMAIN=${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }},REACT_APP_FIREBASE_PROJECT_ID=${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }},REACT_APP_FIREBASE_STORAGE_BUCKET=${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET }},REACT_APP_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }},REACT_APP_FIREBASE_APP_ID=${{ secrets.REACT_APP_FIREBASE_APP_ID }},REACT_APP_FIREBASE_MEASUREMENT_ID=${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}
+          npm install
+          npm run build  # React 앱 빌드
+
+      # 4. Set up Firebase CLI
+      - name: Set up Firebase CLI
+        uses: wzieba/Firebase-Action@v2
+        with:
+          firebase_token: ${{ secrets.FIREBASE_TOKEN }}
+
+      # 5. Deploy to Firebase Hosting
+      - name: Deploy to Firebase Hosting
+        run: |
+          firebase deploy --only hosting --project ${{ secrets.FIREBASE_PROJECT_ID }}

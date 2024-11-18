@@ -4,11 +4,8 @@
     "rewrites": [
       {
         "source": "/**",
-        "destination": "https://firebase-practice-834318137831.us-central1.run.app"
+        "destination": "/index.html" 
       }
     ]
-  },
-  "dataconnect": {
-    "source": "dataconnect"
   }
 }
