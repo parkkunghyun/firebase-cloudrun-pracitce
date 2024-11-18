@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'  # 사용하는 Node.js 버전
+          node-version: '14'  # 사용하는 Node.js 버전
 
       # 3. Install dependencies
       - name: Install dependencies
@@ -26,13 +26,17 @@ jobs:
           npm install
           npm run build  # React 앱 빌드
 
-      # 4. Set up Firebase CLI
-      - name: Set up Firebase CLI
-        uses: wzieba/Firebase-Action@v2
-        with:
-          firebase_token: ${{ secrets.FIREBASE_TOKEN }}
+      # 4. Install Firebase CLI
+      - name: Install Firebase CLI
+        run: |
+          npm install -g firebase-tools  # Firebase CLI를 전역으로 설치
 
-      # 5. Deploy to Firebase Hosting
+      # 5. Authenticate Firebase using GitHub secret
+      - name: Authenticate Firebase
+        run: |
+          firebase login:ci --token ${{ secrets.FIREBASE_TOKEN }}  # Firebase CI 토큰을 사용하여 인증
+
+      # 6. Deploy to Firebase Hosting
       - name: Deploy to Firebase Hosting
         run: |
-          firebase deploy --only hosting --project ${{ secrets.FIREBASE_PROJECT_ID }}
+          firebase deploy --only hosting --project ${{ secrets.FIREBASE_PROJECT_ID }}  # Firebase 프로젝트 ID를 지정하여 배포
