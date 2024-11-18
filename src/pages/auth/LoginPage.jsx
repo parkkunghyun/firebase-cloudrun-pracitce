@@ -1,7 +1,7 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import React, { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom';
-import { auth } from '../../firebaseConfig';
+import { useNavigate } from 'react-router-dom';
+import { auth, googleProvider } from '../../firebaseConfig';
 // 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +20,16 @@ const LoginPage = () => {
     }
 
   }
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      navigate("/");
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+
   return (
     <div>
       <form onSubmit={handleEmailLogin}>
@@ -28,6 +38,8 @@ const LoginPage = () => {
         <button type='submit'>로그인</button>
       </form>
       {error && <p>{error}</p>}
+
+      <button onClick={handleGoogleLogin}>구글로 로그인</button>
     </div>
   )
 }
