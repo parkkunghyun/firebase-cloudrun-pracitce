@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react'
-import { auth } from '../../firebaseConfig';
+import { auth, signUpWithEmail } from '../../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
@@ -16,7 +16,7 @@ const SignupPage = () => {
       if (password !== checkPassword) {
         setError("비밀번호를 다시 입력해주세요");
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        await signUpWithEmail(email, password);
         navigate("/login");
       }
     } catch (e) {
@@ -31,7 +31,7 @@ const SignupPage = () => {
         <input type="email" placeholder='email을 입력해주세요' value={email} onChange={e => setEmail(e.target.value)} />
         <input type="password" placeholder='password를 입력해주세요' value={password} onChange={e => setPassword(e.target.value)} />
         <input type="password" placeholder='password를 한번 더 입력해주세요' value={checkPassword} onChange={e => setCheckPassword(e.target.value)} />
-        <button type='submit'>회원가입</button>
+        <button type='submit' onClick={handleSignup}>회원가입</button>
       </form>
     </div>
   )

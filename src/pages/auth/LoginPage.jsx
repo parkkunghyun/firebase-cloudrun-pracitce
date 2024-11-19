@@ -18,7 +18,6 @@ const LoginPage = () => {
     } catch (e) {
       setError(e.message);
     }
-
   }
 
   const handleGoogleLogin = async () => {

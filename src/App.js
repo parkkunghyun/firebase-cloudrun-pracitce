@@ -12,16 +12,20 @@ import CartPage from './pages/CartPage';
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-      <Sidebar/>
-      <Routes>
-        <Route path='/' element={<MainPage />} />
-        <Route path='/product/:id' element={<DetailPage />} />
-        <Route path='/ai' element={<AiChatPage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/signup' element={<SignupPage />} />
-        <Route path='/cart' element={<CartPage/>} />
-      </Routes>
+      <div className='min-h-screen'>
+        <Navbar />
+        <Sidebar/>
+        <div className='mt-10 ml-36'>
+          <Routes>
+            <Route path='/' element={<MainPage />} />
+            <Route path='/chairs/:id' element={<DetailPage />} />
+            <Route path='/ai' element={<AiChatPage />} />
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/signup' element={<SignupPage />} />
+            <Route path='/cart' element={<CartPage/>} />
+          </Routes>
+        </div>
+      </div>
     </BrowserRouter>
   );
 }
